@@ -1,15 +1,23 @@
 #!/bin/bash
 
-export TARGET=stack_game.pru1
+export TARGET=stack_game.pru0
 echo TARGET=$TARGET
 
 Configure the PRU pins based on which Beagle is running
 machine=$(awk '{print $NF}' /proc/device-tree/model)
 echo -n $machine
+
+# this is the section it should be running
 if [ $machine = "Black" ]; then
     echo " Found"
-    gpiopins="P8_20 P8_42 P8_41 P8_39 P8_40 P8_21"
-    prupins="P8_45 P8_46 P8_43 P8_44 P8_27 P8_28 P8_29"
+    # order: R1, G1, B1, R2, G2, B2
+    gpiopins="P8_42 P8_28 P8_41 P8_39 P8_27 P8_40"
+    prupins="P9_25 P9_27 P8_11 P9_31 P9_29 P9_30 P9_28"
+
+    # trying this instead (address pins are gpio)
+    # gpiopins="P8_42 P8_28 P8_41 P8_39 P8_27 P8_40 P9_31 P9_29 P9_30 P9_28"
+    # prupins="P9_25 P9_27 P8_11"
+
 elif [ $machine = "Blue" ]; then
     echo " Found"
     pins=""

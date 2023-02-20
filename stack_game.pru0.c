@@ -10,6 +10,8 @@
 volatile register uint32_t __R30;
 volatile register uint32_t __R31;
 
+
+
 void main(void)
 {
     // Set up the pointers to each of the GPIO ports
@@ -31,8 +33,12 @@ void main(void)
             // Oring (|=) with R30 sets bits to 1 and
             // Anding (&=) clears bits to 0, the 0xffc mask makes sure the
             // other bits aren't changed.
-            __R31 |=  row<<pru_sel0;
-            __R31 &= (row<<pru_sel0) | 0xfff0;
+
+            __R30 |=  row<<pru_sel0;
+            __R30 &= (row<<pru_sel0) | 0xfff0;
+
+            // gpio[3][GPIO_SETDATAOUT] = gpio_sel1;
+            // __delay_cycles(DELAY);
 
             for(i=0; i<64; i++) {
                 // Top row white
@@ -48,9 +54,9 @@ void main(void)
                 gpio[r12_gpio][GPIO_CLEARDATAOUT] = g12_pin | b12_pin;
                 __delay_cycles(DELAY);
 
-                __R31 |=  pru_clock;    // Toggle clock
+                __R30 |=  pru_clock;    // Toggle clock
                 __delay_cycles(DELAY);
-                __R31 &= ~pru_clock;
+                __R30 &= ~pru_clock;
                 __delay_cycles(DELAY);
 
                 // Top row black
@@ -63,19 +69,20 @@ void main(void)
                 gpio[r12_gpio][GPIO_SETDATAOUT]   = g12_pin;
                 __delay_cycles(DELAY);
 
-                __R31 |=  pru_clock;    // Toggle clock
+                __R30 |=  pru_clock;    // Toggle clock
                 __delay_cycles(DELAY);
-                __R31 &= ~pru_clock;
+                __R30 &= ~pru_clock;
                 __delay_cycles(DELAY);
             }
-            __R31 |=  pru_oe;        // Disable display
+
+            __R30 |=  pru_oe;        // Disable display
             __delay_cycles(DELAY);
-            __R31 |=  pru_latch;     // Toggle latch
+            __R30 |=  pru_latch;     // Toggle latch
             __delay_cycles(DELAY);
-            __R31 &= ~pru_latch;
+            __R30 &= ~pru_latch;
             __delay_cycles(DELAY);
-            __R31 &= ~pru_oe;        // Enable display
-            __delay_cycles(DELAY);
+            __R30 &= ~pru_oe;        // Enable display
+            __delay_cycles(DELAY);       
         }
     }
 }

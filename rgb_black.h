@@ -4,37 +4,57 @@
 // The first 1 in r11 is for the J1 connector
 // See the githuub file for the other connectors
 
-// R1 = P8_42
+// R1 = P8_42, gpio75
 #define r11_gpio 2
 #define r11_pin 11
 
-// G1 = P8_20
-#define g11_gpio 1
-#define g11_pin 31
+// G1 = P8_28, gpio88
+#define g11_gpio 2
+#define g11_pin 24
 
-// B1 = P8_41
+// B1 = P8_41, gpio74
 #define b11_gpio 2
 #define b11_pin 10
 
-// R2 = P8_39
+// R2 = P8_39, gpio76
 #define r12_gpio 2
 #define r12_pin 12
 
-// G2 = P8_21
-#define g12_gpio 1
-#define g12_pin 30
+// G2 = P8_27, gpio86
+#define g12_gpio 2
+#define g12_pin 22
 
-// B2 = P8_40
+// B2 = P8_40, gpio77
 #define b12_gpio 2
 #define b12_pin 13
 
-#define pru_latch 8	// P8_27  These are the bit positions in R30
-#define pru_oe 9    // P8_29
-#define pru_clock 10// P8_28
+/* Matrix control signals on pru0 (r30)
+LAT =   P9_25 / BIT 7
+OE =    P9_27 / BIT 5
+CLK =   P8_11 / BIT 15
+*/
+#define pru_latch 7
+#define pru_oe 5
+#define pru_clock 15
 
 // Control pins are all in GPIO2
 // The pocket has these on R0, the code needs to be changed for this work work
-#define pru_sel0 0 /* must be sequential with sel1 and sel2 */
+
+/* Address pins, pru0, works for r30 and r31
+A = P9_31 / BIT 0
+B = P9_29 / BIT 1
+C = P9_30 / BIT 2
+D = P9_28 / BIT 3
+*/
+#define pru_sel0 0
 #define pru_sel1 1
 #define pru_sel2 2
 #define pru_sel3 3
+
+/* trying to use gpio for addresses instead 
+gpio port 3, bit positions
+*/
+#define gpio_sel0 14
+#define gpio_sel1 15
+#define gpio_sel2 16
+#define gpio_sel3 17
