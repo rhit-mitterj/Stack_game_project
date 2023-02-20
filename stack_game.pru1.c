@@ -7,8 +7,8 @@
 
 #define DELAY 10    // Number of cycles (5ns each) to wait after a write
 
-volatile register uint32_t R30;
-volatile register uint32_t R31;
+volatile register uint32_t __R30;
+volatile register uint32_t __R31;
 
 void main(void)
 {
@@ -31,50 +31,51 @@ void main(void)
             // Oring (|=) with R30 sets bits to 1 and
             // Anding (&=) clears bits to 0, the 0xffc mask makes sure the
             // other bits aren't changed.
-            R31 |=  row<<pru_sel0;
-            R31 &= (row<<pru_sel0)|0xfff0;
+            __R31 |=  row<<pru_sel0;
+            __R31 &= (row<<pru_sel0) | 0xfff0;
 
             for(i=0; i<64; i++) {
                 // Top row white
                 // Combining these to one write works because they are all in
                 // the same gpio port
+
                 gpio[r11_gpio][GPIO_SETDATAOUT] = r11_pin | g11_pin | b11_pin;
-                delay_cycles(DELAY);;
+                __delay_cycles(DELAY);
 
                 // Bottom row red
-                gpio[r12_gpio][GPIO_SETDATAOUT]   = r12_pin;
-                delay_cycles(DELAY);
+                gpio[r12_gpio][GPIO_SETDATAOUT] = r12_pin;
+                __delay_cycles(DELAY);
                 gpio[r12_gpio][GPIO_CLEARDATAOUT] = g12_pin | b12_pin;
-                delay_cycles(DELAY);
+                __delay_cycles(DELAY);
 
-                R30 |=  pru_clock;    // Toggle clock
-                delay_cycles(DELAY);
-                R30 &= ~pru_clock;
-                delay_cycles(DELAY);
+                __R31 |=  pru_clock;    // Toggle clock
+                __delay_cycles(DELAY);
+                __R31 &= ~pru_clock;
+                __delay_cycles(DELAY);
 
                 // Top row black
                 gpio[r11_gpio][GPIO_CLEARDATAOUT] = r11_pin | g11_pin | b11_pin;
-                delay_cycles(DELAY);
+                __delay_cycles(DELAY);
 
                 // Bottom row green
                 gpio[r12_gpio][GPIO_CLEARDATAOUT] = r12_pin | b12_pin;
-                delay_cycles(DELAY);
+                __delay_cycles(DELAY);
                 gpio[r12_gpio][GPIO_SETDATAOUT]   = g12_pin;
-                delay_cycles(DELAY);
+                __delay_cycles(DELAY);
 
-                R30 |=  pru_clock;    // Toggle clock
-                delay_cycles(DELAY);
-                R30 &= ~pru_clock;
-                delay_cycles(DELAY);
+                __R31 |=  pru_clock;    // Toggle clock
+                __delay_cycles(DELAY);
+                __R31 &= ~pru_clock;
+                __delay_cycles(DELAY);
             }
-            R30 |=  pru_oe;        // Disable display
-            delay_cycles(DELAY);
-            R30 |=  pru_latch;     // Toggle latch
-            delay_cycles(DELAY);
-            R30 &= ~pru_latch;
-            delay_cycles(DELAY);
-            R30 &= ~pru_oe;        // Enable display
-            delay_cycles(DELAY);
+            __R31 |=  pru_oe;        // Disable display
+            __delay_cycles(DELAY);
+            __R31 |=  pru_latch;     // Toggle latch
+            __delay_cycles(DELAY);
+            __R31 &= ~pru_latch;
+            __delay_cycles(DELAY);
+            __R31 &= ~pru_oe;        // Enable display
+            __delay_cycles(DELAY);
         }
     }
 }
